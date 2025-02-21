@@ -18,8 +18,8 @@ jobs:
 
     - name: Build and tag Docker image
       run: |
-        docker build -t ${{ secrets.REGISTRY_URL }}/${{ github.repository }}:${{ github.sha }} .
-        docker tag ${{ secrets.REGISTRY_URL }}/${{ github.repository }}:${{ github.sha }} ${{ secrets.REGISTRY_URL }}/${{ github.repository }}:latest
+        docker build -t ${{ secrets.REGISTRY_URL }}/hello-there:${{ github.sha }} .
+        docker tag ${{ secrets.REGISTRY_URL }}/hello-there:${{ github.sha }} ${{ secrets.REGISTRY_URL }}/${{ github.repository }}:latest
 
     - name: Push Docker image
       run: |
