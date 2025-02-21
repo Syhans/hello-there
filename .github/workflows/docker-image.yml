@@ -23,5 +23,5 @@ jobs:
 
     - name: Push Docker image
       run: |
-        docker push ${{ secrets.REGISTRY_URL }}/${{ github.repository }}:${{ github.sha }}
-        docker push ${{ secrets.REGISTRY_URL }}/${{ github.repository }}:latest
+        docker push ${{ secrets.REGISTRY_URL }}/hello-there:${{ github.sha }}
+        docker push ${{ secrets.REGISTRY_URL }}/hello-there:latest
