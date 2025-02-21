@@ -1,0 +1,27 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Login to Docker Registry
+      run: docker login -u ${{ secrets.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_PASSWORD }} ${{ secrets.REGISTRY_URL }}
+
+    - name: Build and tag Docker image
+      run: |
+        docker build -t ${{ secrets.REGISTRY_URL }}/${{ github.repository }}:${{ github.sha }} .
+        docker tag ${{ secrets.REGISTRY_URL }}/${{ github.repository }}:${{ github.sha }} ${{ secrets.REGISTRY_URL }}/${{ github.repository }}:latest
+
+    - name: Push Docker image
+      run: |
+        docker push ${{ secrets.REGISTRY_URL }}/${{ github.repository }}:${{ github.sha }}
+        docker push ${{ secrets.REGISTRY_URL }}/${{ github.repository }}:latest
