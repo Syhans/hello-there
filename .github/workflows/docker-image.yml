@@ -33,6 +33,4 @@ jobs:
           username: ${{ secrets.DEPLOY_USERNAME }}
           key: ${{ secrets.DEPLOY_KEY }}
           port: ${{ secrets.DEPLOY_PORT }}
-          script: |
-            docker compose pull
-            docker compose up -d
+          script_path: scripts/deploy.sh
