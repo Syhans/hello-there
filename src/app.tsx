@@ -30,7 +30,7 @@ export function App() {
           {states[index]}
         </button>
       </div>
-      <p className="fixed top-1 left-1 text-base-content/50 text-xs">Huuh.</p>
+      <p className="fixed top-1 left-1 text-base-content/50 text-xs">Huuuuh.</p>
       {index === 2 && (
         <p className="fixed bottom-1 right-1 text-base-content/50 text-xs">
           (Yes I know, that's not how the scene goes)
