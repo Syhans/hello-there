@@ -2,26 +2,37 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Login to Docker Registry
-      run: docker login -u ${{ secrets.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_PASSWORD }} ${{ secrets.REGISTRY_URL }}
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Build and tag Docker image
-      run: |
-        docker build -t ${{ secrets.REGISTRY_URL }}/hello-there:${{ github.sha }} .
-        docker tag ${{ secrets.REGISTRY_URL }}/hello-there:${{ github.sha }} ${{ secrets.REGISTRY_URL }}/hello-there:latest
+      - name: Login to Docker Registry
+        run: docker login -u ${{ secrets.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_PASSWORD }} ${{ secrets.REGISTRY_URL }}
 
-    - name: Push Docker image
-      run: |
-        docker push ${{ secrets.REGISTRY_URL }}/hello-there:${{ github.sha }}
-        docker push ${{ secrets.REGISTRY_URL }}/hello-there:latest
+      - name: Build and tag Docker image
+        run: |
+          docker build -t ${{ secrets.REGISTRY_URL }}/hello-there:${{ github.sha }} .
+          docker tag ${{ secrets.REGISTRY_URL }}/hello-there:${{ github.sha }} ${{ secrets.REGISTRY_URL }}/hello-there:latest
+
+      - name: Push Docker image
+        run: |
+          docker push ${{ secrets.REGISTRY_URL }}/hello-there:${{ github.sha }}
+          docker push ${{ secrets.REGISTRY_URL }}/hello-there:latest
+
+      - name: Deploy
+        uses: appleboy/ssh-action@v1.2.1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USERNAME }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          script: |
+            docker compose pull
+            docker compose up -d
